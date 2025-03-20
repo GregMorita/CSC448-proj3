@@ -55,16 +55,15 @@ def emission():
             for j in range(1, shape2[1]):
                 dist += (timepts[t,j] - states[k,j])
             dist = abs(dist) / shape2[1] 
+            #print("b", dist)
             #absolute averaged distance for this state/observation
             distances[k] = dist
-            distances = scale_distances(distances)
+            #print("d", distances)
+        distances = scale_distances(distances)
+        #print("a", distances)
         for d in range(len(distances)):
             mat[d,t] = distances[d]
     return mat
-
-
-        
-
 
 
 def basic_model(trans, states, init):
@@ -103,7 +102,7 @@ def viterbi(states, init, trans, emit, observe):
                     prev[t][s] = r
 
     path = [0] * len(observe)
-    path[len(observe) - 1] = prob[len(observe) - 1][2]
+    path[len(observe) - 1] = int(prob[len(observe) - 1][2])
     for t in range(len(observe) - 2, 0, -1):
         path[t] = int(prev[t+1][int(path[t+1])])
     print(prob)
@@ -111,6 +110,7 @@ def viterbi(states, init, trans, emit, observe):
 
 def main():
     print(basic_model(transition_table, states, start))
+    print("stuff", emission())
     print(viterbi(states, start, transition_table, emission(), observation))
 
 
