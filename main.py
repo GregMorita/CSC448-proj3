@@ -14,17 +14,27 @@ transition_table = np.matrix([[0.86, 0.09, 0.01, 0.03, 0.01],[0.01, 0.75, 0.07, 
 #generates emission table for use in part 2
 def emission():
     states = pd.read_csv ("genemarkers_states.tsv", sep = '\t', header=None)
-    timepts = pd.read_csv ("genemarkers_timepoints.tsv", sep = '\t')
-    for col_name, col_values in states.items():
-        print(f"Column name: {col_name}")
-        print(col_values.values)
-        col = col_values.values
-        sum = 0
-        for i in range(len(col)):
-            sum += col[i]
-        for i in range(len(col)):
-            col[i] = col[i] / sum
+    timepts = pd.read_csv ("genemarkers_timepoints.tsv", sep = '\t', )
+    states = np.asmatrix(states.to_numpy())
+    timepts = np.asmatrix(timepts.to_numpy())
+    #print(states, timepts)
+    shape = states.shape
+    shape2 = timepts.shape
+    print(shape)
 
+    #normalize both matrices
+    for i in range(shape[0]):
+        sumn = 0
+        for j in range(1, shape[1]):
+            sumn += states[i,j]
+        for j in range(1,shape[1]):
+            states[i,j] = states[i,j] / sumn
+    for i in range(shape2[0]):
+        sumn = 0
+        for j in range(1, shape2[1]):
+            sumn += timepts[i,j]
+        for j in range(1,shape[1]):
+            timepts[i,j] = timepts[i,j] / sumn
 
 def basic_model(trans, states, init):
     prob = np.zeros((TIME + 1,len(states)),dtype=float)
